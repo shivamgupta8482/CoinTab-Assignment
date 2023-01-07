@@ -1,58 +1,55 @@
-import React from 'react'
-import { TableContainer,Td,Th,Table,Tr,Thead,Tbody,Tfoot } from '@chakra-ui/react'
-import { useEffect } from 'react';
-import { useState } from 'react';
-import UserTable from '../Components/UserTable';
+import React from "react";
+import { Box,Image } from "@chakra-ui/react";
+import { useEffect } from "react";
+import { useState } from "react";
+
+import { useNavigate } from "react-router-dom";
+import UserProfileTable from "../Components/UserProfileTable";
+import FlexComponent from "../Components/FlexComponent";
+import EmptyCard from "../Components/EmptyCard";
 
 const UserProfile = () => {
-const [data,setData] = useState([]);
-const [page,setPage] = useState(2);
-const [filter,setFilter] = useState("");
-
-  const fetchUsers=()=>{
+  const [data, setData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [filter, setFilter] = useState("");
+  const [dataall,setDataall] = useState([]);
+  
+  const navigate = useNavigate();
+  const fetchUsers = () => {
     fetch(`http://localhost:8080/?limit=10&page=${page}&filter=${filter}`)
-  .then((response) => response.json())
-  .then((data) => {
-    console.log(data);
-    setData(data);
-    
-  });
-}
-useEffect(()=>{
-fetchUsers();
-},[])
-console.log(data);
-  return (
-    <TableContainer>
-  <Table variant='striped' colorScheme='teal'>
-    {/* <TableCaption>Imperial to metric conversion factors</TableCaption> */}
-    <Thead>
-      <Tr>
-        <Th>Avatar</Th>
-        <Th>Name</Th>
-        <Th>Location</Th>
-        <Th>Gender</Th>
-        <Th>Mail</Th>
-        <Th >Phone</Th>
-      </Tr>
-    </Thead>
-    <Tbody>
-     {
-      data.map(elem=>(
-        <UserTable data={elem} />
-      ))
-     }
-      
-    </Tbody>
-    <Tfoot>
-      <Tr>
-        <Th></Th>
+      .then((response) => response.json())
+      .then((data) => {
         
-      </Tr>
-    </Tfoot>
-  </Table>
-</TableContainer>
-  )
-}
+        setData(data);
+      });
+  };
+  const fetchUsersall = () => {
+    fetch(`http://localhost:8080/alldata?filter=${filter}`)
+      .then((response) => response.json())
+      .then((data) => {
+        
+        setDataall(data);
+      });
+  };
+  useEffect(() => {
+    fetchUsers();
+    fetchUsersall();
+  }, [page, filter]);
+  console.log(dataall);
 
-export default UserProfile
+  return (
+    <Box>
+      <FlexComponent filter={filter} setFilter={setFilter} setPage={setPage}/>
+      
+{
+  data.length==0?<><EmptyCard /></>
+  :<>
+  <UserProfileTable page={page} setPage={setPage} data={data} number={Math.ceil(dataall.length/10)}/>
+  
+  </>
+}
+    </Box>
+  );
+};
+
+export default UserProfile;

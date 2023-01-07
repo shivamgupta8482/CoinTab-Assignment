@@ -14,34 +14,29 @@ app.get("/getall", async (req, res) => {
   const body = await result.json();
 console.log(body.results);
 
-// body.results.map(elem=>(
-//   new ProjectModel({
-//     gender: elem.gender,
-//   name: elem.name,
-//   location: elem.location,
-//   email: elem.email,
-//   login: elem.login,
-//   dob: elem.dob,
-//   registered: elem.registered,
-//   phone: elem.phone,
-//   cell: elem.cell,
-//   id: elem.id,
-//   picture: elem.picture,
-//   nat: elem.nat
-//   })
-
-// ))
 
 ProjectModel.insertMany(body.results, function(err, res) {
   if (err) throw err;
   console.log("Number of documents inserted: " + res.insertedCount);
 });
-res.send("updated")
+res.send({"msg":"updated"})
 
 
 });
 
+app.get("/alldata",async(req,res)=>{
+  const {filter}=req.query;
+  if(filter){
 
+    const result = await ProjectModel.find({gender:filter});
+    res.send(result);
+  }
+  else{
+    
+    const result = await ProjectModel.find({});
+    res.send(result);
+  }
+})
   
 
 app.get('/', async(req, res)=>{

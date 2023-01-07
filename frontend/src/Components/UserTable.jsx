@@ -2,7 +2,7 @@ import React from 'react'
 import { Tr,Td,Image } from '@chakra-ui/react'
 
 const UserTable = ({data}) => {
-    //console.log(data);
+    
   return (
     <Tr>
     <Td>
