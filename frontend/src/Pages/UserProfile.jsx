@@ -2,11 +2,11 @@ import React from "react";
 import { Box,Image } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useState } from "react";
-
 import { useNavigate } from "react-router-dom";
 import UserProfileTable from "../Components/UserProfileTable";
 import FlexComponent from "../Components/FlexComponent";
 import EmptyCard from "../Components/EmptyCard";
+import Pagenation from "../Components/Pagenation";
 
 const UserProfile = () => {
   const [data, setData] = useState([]);
@@ -35,7 +35,11 @@ const UserProfile = () => {
     fetchUsers();
     fetchUsersall();
   }, [page, filter]);
-  console.log(dataall);
+
+  useEffect(() => {
+    fetchUsers();
+    fetchUsersall();
+  }, []);
 
   return (
     <Box>
@@ -45,7 +49,7 @@ const UserProfile = () => {
   data.length==0?<><EmptyCard /></>
   :<>
   <UserProfileTable page={page} setPage={setPage} data={data} number={Math.ceil(dataall.length/10)}/>
-  
+  <Pagenation  currentpage={page} handlePage={setPage} totalPages={Math.ceil(dataall.length/10)}/>
   </>
 }
     </Box>
